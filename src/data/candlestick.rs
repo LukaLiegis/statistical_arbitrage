@@ -1,9 +1,10 @@
-use chrono::{DateTime, UTC};
+// src/data/candlestick.rs
+use chrono::{DateTime, Utc};
 use serde::{Deserialize ,Serialize};
 
 // Raw candle data from API
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CandleData{
+pub struct Candlestick{
     pub open_time: i64,
     pub open: String,
     pub high: String,
@@ -20,22 +21,32 @@ pub struct CandleData{
 
 impl Candlestick {
     pub fn new(
-        symbol: String,
-        timestamp: DateTime<UTC>,
-        open: f64,
-        high: f64,
-        low: f64,
-        close: f64,
-        volume: f64,
-    ) -> Self{
+        open_time: i64,
+        open: String,
+        high: String,
+        low: String,
+        close: String,
+        volume: String,
+        close_time: i64,
+        quote_asset_volume: String,
+        number_of_trades: i64,
+        taker_buy_base_asset_volume: String,
+        taker_buy_quote_asset_volume: String,
+        ignore: String,
+    ) -> Self {
         Self {
-            symbol,
-            timestamp,
+            open_time,
             open,
             high,
             low,
             close,
             volume,
+            close_time,
+            quote_asset_volume,
+            number_of_trades,
+            taker_buy_base_asset_volume,
+            taker_buy_quote_asset_volume,
+            ignore,
         }
     }
 }

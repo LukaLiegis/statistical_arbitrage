@@ -1,10 +1,10 @@
 use std::collections::HashMap;
-use anyhow::Results;
-use crate::data::candlestick::CandleStick;
+use anyhow::Result;
+use crate::data::candlestick::Candlestick;
 
 pub struct TimeSeriesStorage {
     // Use HashMap where the key is the symbol and the value is a vector of candles
-    data: HashMap<String, Vec<CandleStick>>,
+    data: HashMap<String, Vec<Candlestick>>,
     // Max number of candlesticks to store per symbol
     max_history: usize,
 }
@@ -17,7 +17,7 @@ impl TimeSeriesStorage {
         }
     }
 
-    pub fn add_candlestick(&mut self, candlestick: CandleStick) {
+    pub fn add_candlestick(&mut self, candlestick: Candlestick) {
         let symbol = candlestick.symbol.clone();
         let entry = self.data.entry(symbol).or_insert_with(Vec::new());
 
@@ -51,7 +51,7 @@ impl TimeSeriesStorage {
 
     pub fn save_to_csv(&self, symbol: &str, path: &str) -> Result<()> {
         let candlesticks = self.get_candlestick(symbol);
-        let mut wtr = csv::Writer::from_path(path)?;
+        let mut writer = csv::Writer::from_path(path)?;
 
         for candlestick in candlesticks {
             writer.serialize(candlestick)?;
@@ -65,7 +65,7 @@ impl TimeSeriesStorage {
         let mut reader = csv::Reader::from_path(path)?;
 
         for result in reader.deserialize() {
-            let candlestick: CandleStick = result?;
+            let candlestick: Candlestick = result?;
             self.add_candlestick(candlestick);
         }
 
